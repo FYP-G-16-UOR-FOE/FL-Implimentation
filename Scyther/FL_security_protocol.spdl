@@ -1,0 +1,107 @@
+protocol flprotocol(Server, Client)
+{
+  role Server
+  {
+    fresh kemPkS: Nonce;
+    fresh encKey: Nonce;
+    fresh model: Nonce;
+    fresh Ns: Nonce;
+    var sharedKey: Nonce;
+    var Nc: Nonce;
+    var newupdate: Nonce;
+    
+    // Message tags
+    const msg1tag: Nonce;
+    const msg2tag: Nonce;
+    const msg3tag: Nonce;
+    const msg4tag: Nonce;
+    const msg5tag: Nonce;
+    const msg6tag: Nonce;
+
+    // Message 1: Server sends kemPkS and Ns
+    send_1(Server, Client, 
+           { kemPkS, Ns}pk(Client), 
+           { kemPkS, Ns}sk(Server),msg1tag);
+
+    // Message 2: Server receives sharedKey
+    recv_2(Client, Server, 
+           {{ sharedKey, Nc, Ns}pk(Server)}sk(Client),msg2tag);
+
+    // Message 3: Server sends encKey
+    send_3(Server, Client, 
+           { encKey, Ns, Nc}sharedKey,msg3tag);
+
+    // Message 4: Server sends model
+    send_4(Server, Client, 
+           {model, Ns, Nc}encKey,msg4tag);
+
+
+    // Message 6: Server receives update
+    recv_6(Client, Server, 
+           { newupdate, Ns, Nc}sharedKey,msg6tag);
+
+    // Claims
+    claim(Server, Secret, sharedKey);
+    claim(Server, SKR, sharedKey);
+    claim(Server, SKR, encKey);
+    claim(Server, Secret, encKey);
+    claim(Server, Secret, model);
+    claim(Server, Secret, newupdate);
+    claim(Server, Alive);
+    claim(Server, Weakagree);
+    claim(Server, Niagree);
+    claim(Server, Nisynch);
+  }
+
+  role Client
+  {
+    fresh sharedKey: Nonce;
+    fresh Nc: Nonce;
+    fresh newupdate: Nonce;
+    var kemPkS: Nonce;
+    var Ns: Nonce;
+    var encKey: Nonce;
+    var model: Nonce;
+    
+    const msg1tag: Nonce;
+    const msg2tag: Nonce;
+    const msg3tag: Nonce;
+    const msg4tag: Nonce;
+    const msg5tag: Nonce;
+    const msg6tag: Nonce;
+
+    // Message 1: Client receives kemPkS and Ns
+    recv_1(Server, Client, 
+           { kemPkS, Ns}pk(Client), 
+           { kemPkS, Ns}sk(Server),msg1tag);
+
+    // Message 2: Client sends sharedKey
+    send_2(Client, Server, 
+           {{ sharedKey, Nc, Ns}pk(Server)}sk(Client),msg2tag);
+
+    // Message 3: Client receives encKey
+    recv_3(Server, Client, 
+           { encKey, Ns, Nc}sharedKey,msg3tag);
+
+    // Message 4: Client receives model
+    recv_4(Server, Client, 
+           {model, Ns, Nc}encKey,msg4tag);
+
+
+    // Message 6: Client sends update
+    send_6(Client, Server, 
+           { newupdate, Ns, Nc}sharedKey,msg6tag);
+
+    // Claims
+    claim(Client, Secret, sharedKey);
+    claim(Client, SKR, sharedKey);
+    claim(Client, SKR,  encKey);
+    claim(Client, Secret, encKey);
+    claim(Client, Secret, model);
+    claim(Client, Secret, newupdate);
+    claim(Client, Alive);
+    claim(Client, Weakagree);
+    claim(Client, Niagree);
+    claim(Client, Nisynch);
+  }
+}

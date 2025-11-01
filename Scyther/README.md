@@ -34,7 +34,4 @@ The protocol was tested against the following security properties for both the `
 
 The Scyther tool analyzed the protocol for an unbounded number of sessions against a Dolev-Yao attacker and found no vulnerabilities corresponding to the specified claims.
 
-
-The Scyther tool analyzed the protocol for an unbounded number of sessions against a Dolev-Yao attacker and found no vulnerabilities corresponding to the specified claims.
-
 ![Scyther Verification Results](result.png)

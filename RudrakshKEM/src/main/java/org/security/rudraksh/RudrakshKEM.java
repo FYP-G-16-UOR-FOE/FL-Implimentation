@@ -6,14 +6,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 /**
- * Rudraksh KEM (KEM-poly64) — corrected, compilable implementation.
- * Assumes a correct Ntt7681.java in the same package with methods:
- *   - public void ntt(int[] a)  // in-place forward
- *   - public void invNtt(int[] a) // in-place inverse
- *
- * Notes:
- *  - This file focuses on fixing Java syntax/types and deterministic XOF usage.
- *  - You must ensure AsconXof usage matches the BouncyCastle version you use.
+ * Rudraksh KEM (KEM-poly64) — corrected, compilable implementation
  */
 public class RudrakshKEM {
     // Parameters (keep aligned with your choices)
